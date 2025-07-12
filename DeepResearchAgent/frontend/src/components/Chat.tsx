@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Box, Typography, Paper, Stack, Button, CircularProgress, TextField } from '@mui/material';
 import { Send as SendIcon } from '@mui/icons-material';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
 import { researchService } from '../services/researchService';
 import { QueryType, TimeRange, Source } from '../types';
 import type { Message, ResearchQuery, ResearchResponse } from '../types';
@@ -81,67 +83,9 @@ const Chat: React.FC = () => {
   };
 
   return (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Box
-        sx={{
-          position: 'sticky',
-          top: { xs: 64, sm: 72 }, // AppBar height
-          zIndex: 10,
-          mb: 2,
-        }}
-      >
-        <Paper 
-          elevation={2} 
-          sx={{ 
-            p: { xs: 1, sm: 2 },
-            backgroundColor: 'background.paper',
-            border: 1,
-            borderColor: 'divider',
-            borderRadius: 2,
-            boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-          }}
-        >
-          <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }} alignItems="center" justifyContent="space-between">
-            <Box>
-              <Typography variant="subtitle1" fontWeight="medium">
-                Select Sources
-              </Typography>
-              <SourceSelector
-                sources={sources}
-                onSourceChange={setSources}
-              />
-            </Box>
-            <Box sx={{ display: 'flex', gap: 1, mt: { xs: 1, sm: 0 } }}>
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={() => setTimeRange(TimeRange.LAST_MONTH)}
-                color={timeRange === TimeRange.LAST_MONTH ? 'primary' : 'inherit'}
-              >
-                Last Month
-              </Button>
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={() => setTimeRange(TimeRange.LAST_WEEK)}
-                color={timeRange === TimeRange.LAST_WEEK ? 'primary' : 'inherit'}
-              >
-                Last Week
-              </Button>
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={() => setTimeRange(TimeRange.LAST_DAY)}
-                color={timeRange === TimeRange.LAST_DAY ? 'primary' : 'inherit'}
-              >
-                Last Day
-              </Button>
-            </Box>
-          </Stack>
-        </Paper>
-      </Box>
-
-      <Box sx={{ flex: 1, overflow: 'auto', mb: 2 }}>
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+      {/* Chat messages area, with padding bottom to avoid overlap with fixed input bar */}
+      <Box sx={{ flex: 1, overflow: 'auto', mb: { xs: '90px', sm: '100px' } }}>
         {messages.map((message) => (
           <ChatMessage
             key={message.id}
@@ -154,29 +98,63 @@ const Chat: React.FC = () => {
         <div ref={messagesEndRef} />
       </Box>
 
+      {/* Fixed input bar at the bottom */}
       <Paper 
-        elevation={0}
+        elevation={2}
         sx={{ 
-          p: 2,
-          backgroundColor: 'background.default',
-          border: 1,
+          position: 'fixed',
+          left: { xs: 0, sm: '260px' },
+          right: 0,
+          bottom: 0,
+          zIndex: 1201,
+          p: { xs: 1, sm: 2 },
+          background: 'linear-gradient(90deg, #232526 0%, #343541 100%)',
+          borderTop: 1,
           borderColor: 'divider',
-          borderRadius: 2,
+          borderRadius: 0,
+          boxShadow: '0 -2px 16px 0 rgba(16,163,127,0.12)',
+          width: { xs: '100%', sm: 'calc(100% - 260px)' },
+          maxWidth: '100vw',
         }}
       >
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={2} alignItems="center">
           <TextField
             fullWidth
             multiline
+            minRows={1}
             maxRows={4}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Type your research query..."
             disabled={loading}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: 'primary.main', opacity: 0.7 }} />
+                </InputAdornment>
+              ),
+              style: { borderRadius: 24, background: 'rgba(255,255,255,0.08)' },
+              'aria-label': 'Chat input',
+            }}
             sx={{
+              borderRadius: 4,
+              background: 'rgba(255,255,255,0.04)',
+              boxShadow: '0 2px 8px rgba(16,163,127,0.10)',
+              border: '1.5px solid',
+              borderColor: 'primary.main',
+              transition: 'box-shadow 0.2s, border-color 0.2s',
               '& .MuiOutlinedInput-root': {
-                backgroundColor: 'background.paper',
+                borderRadius: 4,
+                background: 'rgba(255,255,255,0.08)',
+                fontSize: '1.08rem',
+                padding: '6px 12px',
+                border: 'none',
+                boxShadow: 'none',
+                '&.Mui-focused': {
+                  boxShadow: '0 0 0 2px #10a37f44',
+                  borderColor: 'primary.main',
+                },
               },
             }}
           />
@@ -184,9 +162,24 @@ const Chat: React.FC = () => {
             variant="contained"
             onClick={handleSendMessage}
             disabled={loading || !input.trim()}
-            sx={{ minWidth: 100 }}
+            sx={{
+              minWidth: 56,
+              minHeight: 56,
+              borderRadius: '50%',
+              boxShadow: '0 4px 16px 0 #10a37f33',
+              p: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'linear-gradient(90deg, #10a37f 0%, #0b7c5c 100%)',
+              '&:hover': {
+                background: 'linear-gradient(90deg, #0b7c5c 0%, #10a37f 100%)',
+                boxShadow: '0 6px 24px 0 #10a37f44',
+              },
+            }}
+            aria-label="Send message"
           >
-            {loading ? <CircularProgress size={24} /> : <SendIcon />}
+            {loading ? <CircularProgress size={24} /> : <SendIcon fontSize="medium" />}
           </Button>
         </Stack>
       </Paper>
