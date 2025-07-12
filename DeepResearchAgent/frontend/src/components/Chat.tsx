@@ -82,53 +82,64 @@ const Chat: React.FC = () => {
 
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Paper 
-        elevation={0} 
-        sx={{ 
-          p: 2, 
-          mb: 2, 
-          backgroundColor: 'background.default',
-          border: 1,
-          borderColor: 'divider',
-          borderRadius: 2,
+      <Box
+        sx={{
+          position: 'sticky',
+          top: { xs: 64, sm: 72 }, // AppBar height
+          zIndex: 10,
+          mb: 2,
         }}
       >
-        <Stack spacing={2}>
-          <Typography variant="subtitle1" fontWeight="medium">
-            Select Sources
-          </Typography>
-          <SourceSelector
-            sources={sources}
-            onSourceChange={setSources}
-          />
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={() => setTimeRange(TimeRange.LAST_MONTH)}
-              color={timeRange === TimeRange.LAST_MONTH ? 'primary' : 'inherit'}
-            >
-              Last Month
-            </Button>
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={() => setTimeRange(TimeRange.LAST_WEEK)}
-              color={timeRange === TimeRange.LAST_WEEK ? 'primary' : 'inherit'}
-            >
-              Last Week
-            </Button>
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={() => setTimeRange(TimeRange.LAST_DAY)}
-              color={timeRange === TimeRange.LAST_DAY ? 'primary' : 'inherit'}
-            >
-              Last Day
-            </Button>
-          </Box>
-        </Stack>
-      </Paper>
+        <Paper 
+          elevation={2} 
+          sx={{ 
+            p: { xs: 1, sm: 2 },
+            backgroundColor: 'background.paper',
+            border: 1,
+            borderColor: 'divider',
+            borderRadius: 2,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+          }}
+        >
+          <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }} alignItems="center" justifyContent="space-between">
+            <Box>
+              <Typography variant="subtitle1" fontWeight="medium">
+                Select Sources
+              </Typography>
+              <SourceSelector
+                sources={sources}
+                onSourceChange={setSources}
+              />
+            </Box>
+            <Box sx={{ display: 'flex', gap: 1, mt: { xs: 1, sm: 0 } }}>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => setTimeRange(TimeRange.LAST_MONTH)}
+                color={timeRange === TimeRange.LAST_MONTH ? 'primary' : 'inherit'}
+              >
+                Last Month
+              </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => setTimeRange(TimeRange.LAST_WEEK)}
+                color={timeRange === TimeRange.LAST_WEEK ? 'primary' : 'inherit'}
+              >
+                Last Week
+              </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => setTimeRange(TimeRange.LAST_DAY)}
+                color={timeRange === TimeRange.LAST_DAY ? 'primary' : 'inherit'}
+              >
+                Last Day
+              </Button>
+            </Box>
+          </Stack>
+        </Paper>
+      </Box>
 
       <Box sx={{ flex: 1, overflow: 'auto', mb: 2 }}>
         {messages.map((message) => (
