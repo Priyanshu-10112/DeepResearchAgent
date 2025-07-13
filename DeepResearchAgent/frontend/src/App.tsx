@@ -36,7 +36,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Chat sources={sources} timeRange={timeRange} />} />
               <Route path="/saved" element={<SavedReports />} />
-              <Route path="/settings" element={<Settings />} />
+              <Route path="/settings" element={<Settings sources={sources} onSourcesChange={setSources} timeRange={timeRange} onTimeRangeChange={setTimeRange} />} />
             </Routes>
           </Box>
         </Box>
