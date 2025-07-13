@@ -26,11 +26,13 @@ public class DynamicQueryService {
         // Initialize result map
         Map<Source, List<SourceContent>> sourceContents = new HashMap<>();
         
-        // Use all available sources instead of preferred sources
-        List<Source> allSources = Arrays.asList(Source.values());
+        // Use preferred sources from the query, fallback to all sources if none specified
+        List<Source> sourcesToProcess = query.getPreferredSources() != null && !query.getPreferredSources().isEmpty() 
+            ? query.getPreferredSources() 
+            : Arrays.asList(Source.values());
         
         // Process each source in parallel with timeout
-        List<CompletableFuture<Map.Entry<Source, List<SourceContent>>>> futures = allSources.stream()
+        List<CompletableFuture<Map.Entry<Source, List<SourceContent>>>> futures = sourcesToProcess.stream()
             .<CompletableFuture<Map.Entry<Source, List<SourceContent>>>>map(source -> CompletableFuture.supplyAsync(() -> {
                 try {
                     List<SourceContent> contents = switch (source) {

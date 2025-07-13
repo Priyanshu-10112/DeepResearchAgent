@@ -8,9 +8,12 @@ import Chat from './components/Chat';
 import SavedReports from './components/SavedReports';
 import Settings from './components/Settings';
 import { theme as createAppTheme } from './theme';
+import { Source, TimeRange } from './types';
 
 function App() {
   const [darkMode, setDarkMode] = useState(true); // Default to dark mode
+  const [sources, setSources] = useState<Source[]>([Source.NEWS, Source.ACADEMIC, Source.FORUM]);
+  const [timeRange, setTimeRange] = useState<TimeRange>(TimeRange.LAST_MONTH);
   const mode = darkMode ? 'dark' : 'light';
   const theme = useMemo(() => createAppTheme(mode), [mode]);
   const isDesktop = useMediaQuery('(min-width:900px)');
@@ -24,10 +27,14 @@ function App() {
             variant={isDesktop ? 'permanent' : 'temporary'}
             darkMode={darkMode}
             onToggleDarkMode={() => setDarkMode((prev) => !prev)}
+            sources={sources}
+            onSourcesChange={setSources}
+            timeRange={timeRange}
+            onTimeRangeChange={setTimeRange}
           />
           <Box component="main" sx={{ flexGrow: 1, px: { xs: 1, sm: 3 }, pb: 2 }}>
             <Routes>
-              <Route path="/" element={<Chat />} />
+              <Route path="/" element={<Chat sources={sources} timeRange={timeRange} />} />
               <Route path="/saved" element={<SavedReports />} />
               <Route path="/settings" element={<Settings />} />
             </Routes>

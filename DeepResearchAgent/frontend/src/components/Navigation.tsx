@@ -29,14 +29,24 @@ interface NavigationProps {
   variant: 'permanent' | 'temporary';
   darkMode: boolean;
   onToggleDarkMode: () => void;
+  sources: Source[];
+  onSourcesChange: (sources: Source[]) => void;
+  timeRange: TimeRange;
+  onTimeRangeChange: (timeRange: TimeRange) => void;
 }
 
 const drawerWidth = 260;
 
-const Navigation: React.FC<NavigationProps> = ({ variant, darkMode, onToggleDarkMode }) => {
+const Navigation: React.FC<NavigationProps> = ({ 
+  variant, 
+  darkMode, 
+  onToggleDarkMode, 
+  sources, 
+  onSourcesChange, 
+  timeRange, 
+  onTimeRangeChange 
+}) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [sources, setSources] = useState<Source[]>([Source.NEWS, Source.ACADEMIC, Source.FORUM]);
-  const [timeRange, setTimeRange] = useState<TimeRange>(TimeRange.LAST_MONTH);
   const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
@@ -59,12 +69,12 @@ const Navigation: React.FC<NavigationProps> = ({ variant, darkMode, onToggleDark
         <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary', fontWeight: 600 }}>
           Select Sources
         </Typography>
-        <SourceSelector sources={sources} onSourceChange={setSources} />
+        <SourceSelector sources={sources} onSourceChange={onSourcesChange} />
         <Box sx={{ display: 'flex', gap: 1, mt: 2, mb: 1 }}>
           <Button
             variant="outlined"
             size="small"
-            onClick={() => setTimeRange(TimeRange.LAST_MONTH)}
+            onClick={() => onTimeRangeChange(TimeRange.LAST_MONTH)}
             color={timeRange === TimeRange.LAST_MONTH ? 'primary' : 'inherit'}
             sx={{ flex: 1 }}
           >
@@ -73,7 +83,7 @@ const Navigation: React.FC<NavigationProps> = ({ variant, darkMode, onToggleDark
           <Button
             variant="outlined"
             size="small"
-            onClick={() => setTimeRange(TimeRange.LAST_WEEK)}
+            onClick={() => onTimeRangeChange(TimeRange.LAST_WEEK)}
             color={timeRange === TimeRange.LAST_WEEK ? 'primary' : 'inherit'}
             sx={{ flex: 1 }}
           >
@@ -82,7 +92,7 @@ const Navigation: React.FC<NavigationProps> = ({ variant, darkMode, onToggleDark
           <Button
             variant="outlined"
             size="small"
-            onClick={() => setTimeRange(TimeRange.LAST_DAY)}
+            onClick={() => onTimeRangeChange(TimeRange.LAST_DAY)}
             color={timeRange === TimeRange.LAST_DAY ? 'primary' : 'inherit'}
             sx={{ flex: 1 }}
           >

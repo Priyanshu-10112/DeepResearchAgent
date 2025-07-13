@@ -9,12 +9,15 @@ import type { Message, ResearchQuery, ResearchResponse } from '../types';
 import ChatMessage from './ChatMessage';
 import { SourceSelector } from './SourceSelector';
 
-const Chat: React.FC = () => {
+interface ChatProps {
+  sources: Source[];
+  timeRange: TimeRange;
+}
+
+const Chat: React.FC<ChatProps> = ({ sources, timeRange }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [sources, setSources] = useState<Source[]>([Source.NEWS, Source.ACADEMIC, Source.FORUM]); // Default to all sources
-  const [timeRange, setTimeRange] = useState<TimeRange>(TimeRange.LAST_MONTH);
   const [queryType, setQueryType] = useState<QueryType>(QueryType.GENERAL_RESEARCH);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
