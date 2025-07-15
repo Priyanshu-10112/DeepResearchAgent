@@ -66,7 +66,6 @@ public class ResearchService {
     }
 
     private String generateSummary(Map<Source, List<SourceContent>> sourceContents) {
-        // TODO: Implement actual summary generation using LLM
         StringBuilder summary = new StringBuilder();
         summary.append("🔍 Research Summary:\n\n");
         
@@ -82,7 +81,6 @@ public class ResearchService {
     }
 
     private List<String> extractKeyFindings(Map<Source, List<SourceContent>> sourceContents) {
-        // TODO: Implement actual key findings extraction using NLP
         return sourceContents.values().stream()
             .flatMap(List::stream)
             .map(SourceContent::getTitle)
@@ -90,7 +88,6 @@ public class ResearchService {
     }
 
     private List<String> generateRecommendations(Map<Source, List<SourceContent>> sourceContents) {
-        // TODO: Implement actual recommendation generation using LLM
         return Arrays.asList(
             "Monitor official government websites for updates",
             "Join relevant forums for real-time discussions",
@@ -99,7 +96,6 @@ public class ResearchService {
     }
 
     private double calculateConfidenceScore(Map<Source, List<SourceContent>> sourceContents) {
-        // TODO: Implement actual confidence scoring
         return sourceContents.values().stream()
             .flatMap(List::stream)
             .mapToDouble(SourceContent::getRelevanceScore)

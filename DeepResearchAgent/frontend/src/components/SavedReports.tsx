@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -18,6 +17,7 @@ import {
 import { Delete as DeleteIcon, Visibility as ViewIcon } from '@mui/icons-material';
 import { researchService } from '../services/researchService';
 import type { ResearchResponse } from '../types';
+import { useState, useEffect } from 'react';
 
 const SavedReports: React.FC = () => {
   const [reports, setReports] = useState<ResearchResponse[]>([]);
@@ -47,7 +47,7 @@ const SavedReports: React.FC = () => {
     try {
       setIsDeleting(true);
       await researchService.deleteReport(report.topic);
-      setReports(reports.filter(r => r.topic !== report.topic));
+      setReports(reports.filter((r: ResearchResponse) => r.topic !== report.topic));
     } catch (error) {
       console.error('Error deleting report:', error);
     } finally {
@@ -81,7 +81,7 @@ const SavedReports: React.FC = () => {
         <Typography color="text.secondary">No saved reports found.</Typography>
       ) : (
         <List>
-          {reports.map((report) => (
+          {reports.map((report: ResearchResponse) => (
             <ListItem
               key={report.topic}
               secondaryAction={
@@ -130,7 +130,7 @@ const SavedReports: React.FC = () => {
                   <Box>
                     <Typography variant="subtitle1" fontWeight="bold">Key Findings:</Typography>
                     <ul>
-                      {selectedReport.keyFindings.map((finding, index) => (
+                      {selectedReport.keyFindings.map((finding: string, index: number) => (
                         <li key={index}>
                           <Typography variant="body2">{finding}</Typography>
                         </li>
@@ -143,7 +143,7 @@ const SavedReports: React.FC = () => {
                   <Box>
                     <Typography variant="subtitle1" fontWeight="bold">Recommendations:</Typography>
                     <ul>
-                      {selectedReport.recommendations.map((recommendation, index) => (
+                      {selectedReport.recommendations.map((recommendation: string, index: number) => (
                         <li key={index}>
                           <Typography variant="body2">{recommendation}</Typography>
                         </li>
@@ -157,7 +157,7 @@ const SavedReports: React.FC = () => {
                     <Typography variant="subtitle1" fontWeight="bold">
                       {source.charAt(0) + source.slice(1).toLowerCase()} Sources:
                     </Typography>
-                    {contents.map((content, index) => (
+                    {contents.map((content, index: number) => (
                       <Paper key={index} sx={{ p: 1, mb: 1 }}>
                         <Typography variant="subtitle2">{content.title}</Typography>
                         <Typography variant="body2">{content.content}</Typography>

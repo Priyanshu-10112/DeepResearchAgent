@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Box, Typography, Paper, Stack, Button, CircularProgress, TextField } from '@mui/material';
 import { Send as SendIcon } from '@mui/icons-material';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -89,7 +89,7 @@ const Chat: React.FC<ChatProps> = ({ sources, timeRange }) => {
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
       {/* Chat messages area, with padding bottom to avoid overlap with fixed input bar */}
       <Box sx={{ flex: 1, overflow: 'auto', mb: { xs: '90px', sm: '100px' } }}>
-        {messages.map((message) => (
+        {messages.map((message, index: number) => (
           <ChatMessage
             key={message.id}
             message={message}

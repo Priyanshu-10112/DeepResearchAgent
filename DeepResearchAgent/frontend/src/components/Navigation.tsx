@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
   Drawer,
   List,
@@ -24,6 +23,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { SourceSelector } from './SourceSelector';
 import { Source, TimeRange } from '../types';
+import { useState } from 'react';
 
 interface NavigationProps {
   variant: 'permanent' | 'temporary';
@@ -57,7 +57,7 @@ const Navigation: React.FC<NavigationProps> = ({
     { text: 'Settings', icon: <SettingsIcon />, path: '/settings' },
   ];
 
-  const handleDrawerToggle = () => setDrawerOpen((open) => !open);
+  const handleDrawerToggle = () => setDrawerOpen((open: boolean) => !open);
 
   const drawer = (
     <Box sx={{ width: drawerWidth, height: '100%', display: 'flex', flexDirection: 'column', pt: 2 }}>

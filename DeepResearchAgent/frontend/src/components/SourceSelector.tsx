@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { Source } from '../types';
 

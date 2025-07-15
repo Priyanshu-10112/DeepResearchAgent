@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
   Container,
   Typography,
@@ -11,6 +10,7 @@ import {
 } from '@mui/material';
 import { Source, TimeRange } from '../types';
 import { SourceSelector } from './SourceSelector';
+import { useState } from 'react';
 
 interface SettingsProps {
   sources: Source[];

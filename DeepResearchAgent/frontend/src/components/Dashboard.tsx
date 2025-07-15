@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -32,9 +31,10 @@ import ShareIcon from '@mui/icons-material/Share';
 import DownloadIcon from '@mui/icons-material/Download';
 import { researchService, availableSources } from '../services/researchService';
 import { QueryType, TimeRange } from '../types';
-import type { ResearchResponse, Source } from '../types';
+import type { ResearchResponse, SourceContent } from '../types';
 import { toast } from 'react-toastify';
 import { Save as SaveIcon, Delete as DeleteIcon, Refresh as RefreshIcon } from '@mui/icons-material';
+import { useState, useEffect } from 'react';
 
 const QUERY_TYPES = Object.values(QueryType);
 const TIME_RANGES = Object.values(TimeRange);
@@ -77,7 +77,7 @@ const Dashboard: React.FC = () => {
         <Typography color="text.secondary">No recent reports found.</Typography>
       ) : (
         <Grid container spacing={2}>
-          {recentReports.map((results) => (
+          {recentReports.map((results: ResearchResponse) => (
             <Grid item xs={12} key={results.topic}>
               <Paper sx={{ p: 2 }}>
                 <Typography variant="h6" gutterBottom>
@@ -96,7 +96,7 @@ const Dashboard: React.FC = () => {
                       Key Findings:
                     </Typography>
                     <ul>
-                      {results.keyFindings.map((finding, index) => (
+                      {results.keyFindings.map((finding: string, index: number) => (
                         <li key={index}>
                           <Typography variant="body2">{finding}</Typography>
                         </li>
@@ -111,7 +111,7 @@ const Dashboard: React.FC = () => {
                       Recommendations:
                     </Typography>
                     <ul>
-                      {results.recommendations.map((recommendation, index) => (
+                      {results.recommendations.map((recommendation: string, index: number) => (
                         <li key={index}>
                           <Typography variant="body2">{recommendation}</Typography>
                         </li>
@@ -120,13 +120,13 @@ const Dashboard: React.FC = () => {
                   </Box>
                 )}
 
-                {results.sourceContents && Object.entries(results.sourceContents).map(([source, contents]) => (
+                {results.sourceContents && Object.entries(results.sourceContents).map(([source, contents]: [string, SourceContent[]]) => (
                   <Box key={source} sx={{ mb: 2 }}>
                     <Typography variant="subtitle1" fontWeight="bold">
                       {source.charAt(0) + source.slice(1).toLowerCase()} Sources:
                     </Typography>
                     <Stack spacing={1}>
-                      {contents.map((content, index) => (
+                      {contents.map((content: SourceContent, index: number) => (
                         <Paper key={index} variant="outlined" sx={{ p: 1 }}>
                           <Typography variant="subtitle2">{content.title}</Typography>
                           <Typography variant="body2">{content.content}</Typography>
