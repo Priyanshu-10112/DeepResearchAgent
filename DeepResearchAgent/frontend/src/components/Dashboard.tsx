@@ -84,7 +84,7 @@ const Dashboard: React.FC = () => {
             <Grid item xs={12} md={6} key={results.topic}>
               <Card elevation={4} sx={{ borderRadius: 3, overflow: 'hidden', background: theme.palette.background.paper }}>
                 {/* Summary Section */}
-                <Paper elevation={0} sx={{ p: 3, background: theme.palette.mode === 'dark' ? alpha(theme.palette.primary.main, 0.10) : alpha(theme.palette.primary.main, 0.04), borderRadius: 0 }}>
+                <Paper elevation={0} sx={{ p: 3, background: theme.palette.background.paper, borderRadius: 0 }}>
                   <Typography variant="h6" fontWeight="bold" gutterBottom>
                     {results.topic}
                   </Typography>
@@ -156,7 +156,8 @@ const Dashboard: React.FC = () => {
                                 )}
                               </Stack>
                               {content.url && (
-                                <Button size="small" href={content.url} target="_blank" rel="noopener noreferrer" startIcon={<SearchIcon />}>
+                                <Button size="small" href={content.url} target="_blank" rel="noopener noreferrer" startIcon={<SearchIcon />} aria-label={`Read more about ${content.title}`}
+                                  sx={{ background: theme.palette.primary.main, color: theme.palette.primary.contrastText, '&:hover': { background: theme.palette.primary.dark } }}>
                                   Read more
                                 </Button>
                               )}

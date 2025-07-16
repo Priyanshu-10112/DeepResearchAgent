@@ -13,6 +13,7 @@ import {
   Button,
   Stack,
   CircularProgress,
+  useTheme,
 } from '@mui/material';
 import { Delete as DeleteIcon, Visibility as ViewIcon } from '@mui/icons-material';
 import { researchService } from '../services/researchService';
@@ -20,6 +21,7 @@ import type { ResearchResponse } from '../types';
 import { useState, useEffect } from 'react';
 
 const SavedReports: React.FC = () => {
+  const theme = useTheme();
   const [reports, setReports] = useState<ResearchResponse[]>([]);
   const [selectedReport, setSelectedReport] = useState<ResearchResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -118,6 +120,7 @@ const SavedReports: React.FC = () => {
         onClose={handleCloseDialog}
         maxWidth="md"
         fullWidth
+        PaperProps={{ sx: { background: theme.palette.background.paper } }}
       >
         {selectedReport && (
           <>
@@ -158,13 +161,14 @@ const SavedReports: React.FC = () => {
                       {source.charAt(0) + source.slice(1).toLowerCase()} Sources:
                     </Typography>
                     {contents.map((content, index: number) => (
-                      <Paper key={index} sx={{ p: 1, mb: 1 }}>
+                      <Paper key={index} sx={{ p: 1, mb: 1, background: theme.palette.background.paper }}>
                         <Typography variant="subtitle2">{content.title}</Typography>
                         <Typography variant="body2">{content.content}</Typography>
                         {content.url && (
-                          <Typography variant="caption" component="a" href={content.url} target="_blank" rel="noopener noreferrer">
+                          <Button size="small" href={content.url} target="_blank" rel="noopener noreferrer" aria-label={`Read more about ${content.title}`}
+                            sx={{ background: theme.palette.primary.main, color: theme.palette.primary.contrastText, '&:hover': { background: theme.palette.primary.dark } }}>
                             Read more
-                          </Typography>
+                          </Button>
                         )}
                       </Paper>
                     ))}
@@ -173,7 +177,7 @@ const SavedReports: React.FC = () => {
               </Stack>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleCloseDialog}>Close</Button>
+              <Button onClick={handleCloseDialog} aria-label="Close dialog" sx={{ background: theme.palette.primary.main, color: theme.palette.primary.contrastText, '&:hover': { background: theme.palette.primary.dark } }}>Close</Button>
             </DialogActions>
           </>
         )}

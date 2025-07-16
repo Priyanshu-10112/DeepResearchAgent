@@ -58,7 +58,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSave, onDelete, se
       <Box sx={{ mt: 2, background: theme.palette.background.default, borderRadius: 2, p: 2 }}>
         {/* Summary Section */}
         {summary && (
-          <Paper elevation={0} sx={{ p: 2, background: theme.palette.mode === 'dark' ? alpha(theme.palette.primary.main, 0.10) : theme.palette.primary.light, borderRadius: 2, mb: 2 }}>
+          <Paper elevation={0} sx={{ p: 2, background: theme.palette.background.paper, borderRadius: 2, mb: 2 }}>
             {topic && (
               <Typography variant="h6" fontWeight="bold" gutterBottom>
                 {topic}
@@ -75,7 +75,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSave, onDelete, se
 
         {/* Key Findings */}
         {keyFindings && keyFindings.length > 0 && (
-          <Box sx={{ p: 2, background: theme.palette.mode === 'dark' ? alpha(theme.palette.success.main, 0.10) : alpha(theme.palette.success.main, 0.08), borderRadius: 2, mb: 2 }}>
+          <Box sx={{ p: 2, background: theme.palette.background.paper, borderRadius: 2, mb: 2 }}>
             <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
               💡 Key Findings
             </Typography>
@@ -91,7 +91,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSave, onDelete, se
 
         {/* Recommendations */}
         {recommendations && recommendations.length > 0 && (
-          <Box sx={{ p: 2, background: theme.palette.mode === 'dark' ? alpha(theme.palette.warning.main, 0.10) : alpha(theme.palette.warning.main, 0.12), borderRadius: 2, mb: 2 }}>
+          <Box sx={{ p: 2, background: theme.palette.background.paper, borderRadius: 2, mb: 2 }}>
             <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
               ✔️ Recommendations
             </Typography>
@@ -107,7 +107,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSave, onDelete, se
 
         {/* Source Cards */}
         {filteredContents.map(([source, contents]) => (
-          <Box key={source} sx={{ p: 2, background: theme.palette.mode === 'dark' ? alpha(theme.palette.info.main, 0.10) : alpha(theme.palette.info.main, 0.08), borderRadius: 2, mb: 2 }}>
+          <Box key={source} sx={{ p: 2, background: theme.palette.background.paper, borderRadius: 2, mb: 2 }}>
             <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
               {source === 'NEWS' && '📰 News'}
               {source === 'ACADEMIC' && '🎓 Academic'}
@@ -132,7 +132,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSave, onDelete, se
                     )}
                   </Stack>
                   {content.url && (
-                    <Button size="small" href={content.url} target="_blank" rel="noopener noreferrer" startIcon={<SearchIcon />}>
+                    <Button size="small" href={content.url} target="_blank" rel="noopener noreferrer" startIcon={<SearchIcon />} aria-label={`Read more about ${content.title}`}
+                      sx={{ background: theme.palette.primary.main, color: theme.palette.primary.contrastText, '&:hover': { background: theme.palette.primary.dark } }}>
                       Read more
                     </Button>
                   )}
@@ -164,12 +165,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSave, onDelete, se
             {message.role === 'assistant' && (
               <>
                 <Tooltip title="Save">
-                  <IconButton size="small" onClick={onSave}>
+                  <IconButton size="small" onClick={onSave} aria-label="Save message">
                     <SaveIcon />
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Delete">
-                  <IconButton size="small" onClick={onDelete}>
+                  <IconButton size="small" onClick={onDelete} aria-label="Delete message">
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>

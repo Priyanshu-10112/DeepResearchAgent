@@ -7,6 +7,7 @@ import {
   Box,
   Divider,
   Stack,
+  useTheme,
 } from '@mui/material';
 import { Source, TimeRange } from '../types';
 import { SourceSelector } from './SourceSelector';
@@ -29,6 +30,7 @@ const Settings: React.FC<SettingsProps> = ({
     maxResults: 10,
     minConfidence: 0.7,
   });
+  const theme = useTheme();
 
   const handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setSettings({
@@ -43,7 +45,7 @@ const Settings: React.FC<SettingsProps> = ({
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth="md" sx={{ mt: 4, mb: 4, background: theme.palette.background.default }}>
       <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 700, color: 'primary.main' }}>
         Settings
       </Typography>
@@ -59,7 +61,7 @@ const Settings: React.FC<SettingsProps> = ({
           Select which sources to include in your research queries. These settings are synchronized with the sidebar.
         </Typography>
         
-        <Box sx={{ mb: 3, p: 2, bgcolor: 'background.default', borderRadius: 1 }}>
+        <Box sx={{ mb: 3, p: 2, bgcolor: theme.palette.background.paper, borderRadius: 1 }}>
           <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary', fontWeight: 600 }}>
             Available Sources
           </Typography>
@@ -75,7 +77,7 @@ const Settings: React.FC<SettingsProps> = ({
           Set the default time range for research queries.
         </Typography>
         
-        <Box sx={{ mb: 3, p: 2, bgcolor: 'background.default', borderRadius: 1 }}>
+        <Box sx={{ mb: 3, p: 2, bgcolor: theme.palette.background.paper, borderRadius: 1 }}>
           <Stack direction="row" spacing={1}>
             <Button
               variant="outlined"
@@ -137,7 +139,7 @@ const Settings: React.FC<SettingsProps> = ({
           />
         </Box>
 
-        <Box sx={{ mb: 3, p: 2, bgcolor: 'background.paper', borderRadius: 1, border: '1px solid', borderColor: 'divider' }}>
+        <Box sx={{ mb: 3, p: 2, bgcolor: theme.palette.background.paper, borderRadius: 1, border: '1px solid', borderColor: 'divider' }}>
           <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
             Current Settings Summary:
           </Typography>
@@ -157,7 +159,8 @@ const Settings: React.FC<SettingsProps> = ({
             variant="contained"
             color="primary"
             onClick={handleSave}
-            sx={{ minWidth: 120 }}
+            aria-label="Save settings"
+            sx={{ minWidth: 120, background: theme.palette.primary.main, color: theme.palette.primary.contrastText, '&:hover': { background: theme.palette.primary.dark } }}
           >
             Save Settings
           </Button>
@@ -169,6 +172,7 @@ const Settings: React.FC<SettingsProps> = ({
                 minConfidence: 0.7,
               });
             }}
+            aria-label="Reset to defaults"
             sx={{ minWidth: 120 }}
           >
             Reset to Defaults
