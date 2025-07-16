@@ -17,9 +17,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class AcademicSourceService implements DataSourceService {
@@ -50,11 +52,17 @@ public class AcademicSourceService implements DataSourceService {
         int retryCount = 0;
         while (retryCount < MAX_RETRIES) {
             try {
+                StringBuilder searchQuery = new StringBuilder("all:" + query);
+                // Add time range filter
+                if (timeRange != null && timeRange != DynamicQuery.TimeRange.ALL_TIME) {
+                    String fromDate = getFromDate(timeRange);
+                    searchQuery.append(" AND submittedDate:[").append(fromDate).append("0000 TO *]");
+                }
                 String url = UriComponentsBuilder.newInstance()
                     .scheme("https")
                     .host("export.arxiv.org")
                     .path("/api/query")
-                    .queryParam("search_query", "all:" + query)
+                    .queryParam("search_query", searchQuery.toString())
                     .queryParam("start", 0)
                     .queryParam("max_results", apiConfig.getArxivMaxResults())
                     .queryParam("sortBy", "relevance")
@@ -95,6 +103,18 @@ public class AcademicSourceService implements DataSourceService {
         }
         
         return new ArrayList<>();
+    }
+
+    private String getFromDate(DynamicQuery.TimeRange timeRange) {
+        java.time.LocalDate now = java.time.LocalDate.now();
+        java.time.LocalDate fromDate = switch (timeRange) {
+            case LAST_DAY -> now.minusDays(1);
+            case LAST_WEEK -> now.minusWeeks(1);
+            case LAST_MONTH -> now.minusMonths(1);
+            case LAST_YEAR -> now.minusYears(1);
+            case ALL_TIME -> now.minusYears(20);
+        };
+        return fromDate.format(java.time.format.DateTimeFormatter.BASIC_ISO_DATE);
     }
     
     private SourceContent convertToSourceContent(ArxivEntry entry) {

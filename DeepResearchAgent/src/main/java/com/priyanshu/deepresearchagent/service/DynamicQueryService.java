@@ -9,6 +9,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import com.priyanshu.deepresearchagent.service.BasicSummarizationService;
 
 @Service
 public class DynamicQueryService {
@@ -21,6 +22,9 @@ public class DynamicQueryService {
     
     @Autowired
     private ForumSourceService forumSourceService;
+
+    @Autowired
+    private BasicSummarizationService basicSummarizationService;
 
     public ResearchResult processDynamicQuery(DynamicQuery query) {
         // Initialize result map
@@ -63,8 +67,17 @@ public class DynamicQueryService {
             }
         });
 
-        // Generate summary based on query type
-        String summary = generateSummary(query, sourceContents);
+        // --- NEW: Aggregate all descriptions for summarization ---
+        List<String> allDescriptions = sourceContents.values().stream()
+            .flatMap(list -> list.stream())
+            .map(SourceContent::getDescription)
+            .filter(Objects::nonNull)
+            .filter(desc -> !desc.isBlank())
+            .collect(Collectors.toList());
+
+        // Generate summary using BasicSummarizationService
+        String summary = basicSummarizationService.generateSummary(query.getQuery(), allDescriptions);
+        // --- END NEW ---
         
         // Extract key findings
         List<String> keyFindings = extractKeyFindings(sourceContents, query.getQueryType());
@@ -84,58 +97,6 @@ public class DynamicQueryService {
             keyFindings,
             recommendations
         );
-    }
-
-    private String generateSummary(DynamicQuery query, Map<Source, List<SourceContent>> sourceContents) {
-        StringBuilder summary = new StringBuilder();
-        
-        // Count total sources and articles
-        int totalSources = sourceContents.size();
-        int totalArticles = sourceContents.values().stream()
-            .mapToInt(List::size)
-            .sum();
-
-        // Start with a brief overview
-        summary.append(String.format("Analysis of %d articles from %d sources reveals ", totalArticles, totalSources));
-
-        // Collect key findings from each source
-        Map<Source, Optional<SourceContent>> mostRelevantBySource = sourceContents.entrySet().stream()
-            .collect(Collectors.toMap(
-                Map.Entry::getKey,
-                e -> e.getValue().stream()
-                    .max(Comparator.comparingDouble(SourceContent::getRelevanceScore))
-            ));
-
-        // Build a cohesive paragraph
-        List<String> keyPoints = new ArrayList<>();
-        
-        mostRelevantBySource.forEach((source, contentOpt) -> {
-            contentOpt.ifPresent(content -> {
-                String sourceType = switch (source) {
-                    case NEWS -> "news reports";
-                    case ACADEMIC -> "academic research";
-                    case FORUM -> "community discussions";
-                };
-                keyPoints.add(String.format("%s indicates %s", sourceType, content.getTitle()));
-            });
-        });
-
-        // Combine key points into a paragraph
-        if (!keyPoints.isEmpty()) {
-            summary.append(String.join(". ", keyPoints));
-        }
-
-        // Add a brief conclusion
-        summary.append(". This information suggests ");
-        switch (query.getQueryType()) {
-            case IMMIGRATION_RULES -> summary.append("significant developments in immigration policies");
-            case UNIVERSITY_CHANGES -> summary.append("important changes in university regulations");
-            case COMPETITOR_ACTIVITY -> summary.append("notable movements in competitor strategies");
-            default -> summary.append("relevant updates in the research area");
-        }
-        summary.append(".");
-
-        return summary.toString();
     }
 
     private List<String> extractKeyFindings(Map<Source, List<SourceContent>> sourceContents, 

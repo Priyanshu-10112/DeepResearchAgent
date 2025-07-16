@@ -8,6 +8,7 @@ import { QueryType, TimeRange, Source } from '../types';
 import type { Message, ResearchQuery, ResearchResponse } from '../types';
 import ChatMessage from './ChatMessage';
 import { SourceSelector } from './SourceSelector';
+import { useTheme } from '@mui/material';
 
 interface ChatProps {
   sources: Source[];
@@ -15,6 +16,7 @@ interface ChatProps {
 }
 
 const Chat: React.FC<ChatProps> = ({ sources, timeRange }) => {
+  const theme = useTheme();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -111,7 +113,7 @@ const Chat: React.FC<ChatProps> = ({ sources, timeRange }) => {
           bottom: 0,
           zIndex: 1201,
           p: { xs: 1, sm: 2 },
-          background: 'linear-gradient(90deg, #232526 0%, #343541 100%)',
+          background: theme.palette.background.paper,
           borderTop: 1,
           borderColor: 'divider',
           borderRadius: 0,
@@ -137,26 +139,32 @@ const Chat: React.FC<ChatProps> = ({ sources, timeRange }) => {
                   <SearchIcon sx={{ color: 'primary.main', opacity: 0.7 }} />
                 </InputAdornment>
               ),
-              style: { borderRadius: 24, background: 'rgba(255,255,255,0.08)' },
+              style: {
+                borderRadius: 24,
+                background: theme.palette.background.default,
+                color: theme.palette.text.primary,
+              },
               'aria-label': 'Chat input',
             }}
             sx={{
               borderRadius: 4,
-              background: 'rgba(255,255,255,0.04)',
+              background: theme.palette.background.paper,
+              color: theme.palette.text.primary,
               boxShadow: '0 2px 8px rgba(16,163,127,0.10)',
               border: '1.5px solid',
-              borderColor: 'primary.main',
+              borderColor: theme.palette.primary.main,
               transition: 'box-shadow 0.2s, border-color 0.2s',
               '& .MuiOutlinedInput-root': {
                 borderRadius: 4,
-                background: 'rgba(255,255,255,0.08)',
+                background: theme.palette.background.default,
                 fontSize: '1.08rem',
                 padding: '6px 12px',
                 border: 'none',
                 boxShadow: 'none',
+                color: theme.palette.text.primary,
                 '&.Mui-focused': {
-                  boxShadow: '0 0 0 2px #10a37f44',
-                  borderColor: 'primary.main',
+                  boxShadow: `0 0 0 2px ${theme.palette.primary.main}44`,
+                  borderColor: theme.palette.primary.main,
                 },
               },
             }}

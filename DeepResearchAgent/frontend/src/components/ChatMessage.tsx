@@ -7,9 +7,13 @@ import {
   IconButton,
   CircularProgress,
   Divider,
+  Button,
+  useTheme,
+  alpha,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SearchIcon from '@mui/icons-material/Search';
 import { Message, ResearchResponse, Source } from '../types';
 import { format } from 'date-fns';
 import { motion } from 'framer-motion';
@@ -38,10 +42,11 @@ interface ChatMessageProps {
 }
 
 const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSave, onDelete, selectedSources = [Source.NEWS, Source.ACADEMIC, Source.FORUM] }) => {
+  const theme = useTheme();
   const renderResults = () => {
     if (!message.results) return null;
 
-    const { sourceContents, keyFindings, recommendations } = message.results;
+    const { sourceContents, keyFindings, recommendations, summary, topic, timestamp } = message.results as ResearchResponse & { topic?: string; summary?: string; timestamp?: string };
     if (!sourceContents) return null;
 
     const filteredContents = Object.entries(sourceContents)
@@ -50,137 +55,93 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSave, onDelete, se
     if (filteredContents.length === 0) return null;
 
     return (
-      <Stack spacing={2} sx={{ mt: 2 }}>
-        {/* Key Findings Section */}
-        {keyFindings && keyFindings.length > 0 && (
-          <Box>
-            <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
-              Key Findings
-            </Typography>
-            <Paper 
-              variant="outlined" 
-              sx={{ 
-                p: 2,
-                backgroundColor: 'background.paper',
-              }}
-            >
-              <Stack spacing={1}>
-                {keyFindings.map((finding, index) => (
-                  <Typography 
-                    key={index} 
-                    variant="body2"
-                    sx={{ 
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: 1,
-                      '&::before': {
-                        content: '"•"',
-                        color: 'primary.main',
-                        fontWeight: 'bold',
-                      }
-                    }}
-                  >
-                    {finding}
-                  </Typography>
-                ))}
-              </Stack>
-            </Paper>
-          </Box>
-        )}
-
-        {/* Recommendations Section */}
-        {recommendations && recommendations.length > 0 && (
-          <Box>
-            <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
-              Recommendations
-            </Typography>
-            <Paper 
-              variant="outlined" 
-              sx={{ 
-                p: 2,
-                backgroundColor: 'background.paper',
-              }}
-            >
-              <Stack spacing={1}>
-                {recommendations.map((recommendation, index) => (
-                  <Typography 
-                    key={index} 
-                    variant="body2"
-                    sx={{ 
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: 1,
-                      '&::before': {
-                        content: '"→"',
-                        color: 'primary.main',
-                      }
-                    }}
-                  >
-                    {recommendation}
-                  </Typography>
-                ))}
-              </Stack>
-            </Paper>
-          </Box>
-        )}
-
-        {/* Source Contents Section */}
-        <Divider sx={{ my: 2 }} />
-        <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
-          Source Details
-        </Typography>
-        {filteredContents.map(([source, contents]) => {
-          if (!contents || contents.length === 0) return null;
-          
-          return (
-            <Box key={source}>
-              <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
-                {source.charAt(0) + source.slice(1).toLowerCase()} Sources
+      <Box sx={{ mt: 2, background: theme.palette.background.default, borderRadius: 2, p: 2 }}>
+        {/* Summary Section */}
+        {summary && (
+          <Paper elevation={0} sx={{ p: 2, background: theme.palette.mode === 'dark' ? alpha(theme.palette.primary.main, 0.10) : theme.palette.primary.light, borderRadius: 2, mb: 2 }}>
+            {topic && (
+              <Typography variant="h6" fontWeight="bold" gutterBottom>
+                {topic}
               </Typography>
-              <Stack spacing={1}>
-                {contents.map((content, index) => (
-                  <Paper 
-                    key={index} 
-                    variant="outlined" 
-                    sx={{ 
-                      p: 2,
-                      backgroundColor: 'background.paper',
-                      '&:hover': {
-                        backgroundColor: 'action.hover',
-                      },
-                    }}
-                  >
-                    <Typography variant="subtitle2" gutterBottom>
-                      {content.title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" paragraph>
-                      {content.content}
-                    </Typography>
-                    {content.url && (
-                      <Typography 
-                        variant="caption" 
-                        component="a" 
-                        href={content.url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        sx={{ 
-                          color: 'primary.main',
-                          textDecoration: 'none',
-                          '&:hover': {
-                            textDecoration: 'underline',
-                          },
-                        }}
-                      >
-                        Read more
-                      </Typography>
+            )}
+            <Typography variant="body1">{summary}</Typography>
+            {timestamp && (
+              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
+                {new Date(timestamp).toLocaleString()}
+              </Typography>
+            )}
+          </Paper>
+        )}
+
+        {/* Key Findings */}
+        {keyFindings && keyFindings.length > 0 && (
+          <Box sx={{ p: 2, background: theme.palette.mode === 'dark' ? alpha(theme.palette.success.main, 0.10) : alpha(theme.palette.success.main, 0.08), borderRadius: 2, mb: 2 }}>
+            <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
+              💡 Key Findings
+            </Typography>
+            <ul style={{ margin: 0, paddingLeft: 20 }}>
+              {keyFindings.map((finding, index) => (
+                <li key={index}>
+                  <Typography variant="body2">{finding}</Typography>
+                </li>
+              ))}
+            </ul>
+          </Box>
+        )}
+
+        {/* Recommendations */}
+        {recommendations && recommendations.length > 0 && (
+          <Box sx={{ p: 2, background: theme.palette.mode === 'dark' ? alpha(theme.palette.warning.main, 0.10) : alpha(theme.palette.warning.main, 0.12), borderRadius: 2, mb: 2 }}>
+            <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
+              ✔️ Recommendations
+            </Typography>
+            <ul style={{ margin: 0, paddingLeft: 20 }}>
+              {recommendations.map((recommendation, index) => (
+                <li key={index}>
+                  <Typography variant="body2">{recommendation}</Typography>
+                </li>
+              ))}
+            </ul>
+          </Box>
+        )}
+
+        {/* Source Cards */}
+        {filteredContents.map(([source, contents]) => (
+          <Box key={source} sx={{ p: 2, background: theme.palette.mode === 'dark' ? alpha(theme.palette.info.main, 0.10) : alpha(theme.palette.info.main, 0.08), borderRadius: 2, mb: 2 }}>
+            <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
+              {source === 'NEWS' && '📰 News'}
+              {source === 'ACADEMIC' && '🎓 Academic'}
+              {source === 'FORUM' && '💬 Forum'}
+              {!(source === 'NEWS' || source === 'ACADEMIC' || source === 'FORUM') && source}
+            </Typography>
+            <Stack spacing={2}>
+              {contents.map((content, index) => (
+                <Paper key={index} variant="outlined" sx={{ p: 2, borderRadius: 2, background: theme.palette.background.paper }}>
+                  <Typography variant="subtitle2" fontWeight="bold">
+                    {content.title}
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    {content.content}
+                  </Typography>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                    {content.author && (
+                      <Typography variant="caption" color="text.secondary">👤 {content.author}</Typography>
                     )}
-                  </Paper>
-                ))}
-              </Stack>
-            </Box>
-          );
-        })}
-      </Stack>
+                    {content.publishedDate && (
+                      <Typography variant="caption" color="text.secondary">📅 {content.publishedDate}</Typography>
+                    )}
+                  </Stack>
+                  {content.url && (
+                    <Button size="small" href={content.url} target="_blank" rel="noopener noreferrer" startIcon={<SearchIcon />}>
+                      Read more
+                    </Button>
+                  )}
+                </Paper>
+              ))}
+            </Stack>
+          </Box>
+        ))}
+      </Box>
     );
   };
 
