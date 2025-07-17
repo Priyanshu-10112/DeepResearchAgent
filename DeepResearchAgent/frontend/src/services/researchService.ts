@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { ResearchQuery, ResearchResponse, ApiError, Source } from '../types';
+import type { ResearchQuery, ResearchResponse, ApiError } from '../types';
 
 const api = axios.create({
   baseURL: 'http://localhost:8080/api',

@@ -5,17 +5,13 @@ import {
   Stack,
   Tooltip,
   IconButton,
-  CircularProgress,
-  Divider,
   Button,
   useTheme,
-  alpha,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 import { Message, ResearchResponse, Source } from '../types';
-import { format } from 'date-fns';
 import { motion } from 'framer-motion';
 import { styled } from '@mui/material/styles';
 
@@ -64,7 +60,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSave, onDelete, se
                 {topic}
               </Typography>
             )}
-            <Typography variant="body1">{summary}</Typography>
+            <ul style={{ margin: 0, paddingLeft: 20 }}>
+              {summary.split('•').map((point, idx) => (
+                point.trim() && <li key={idx}><Typography variant="body1">{point.trim()}</Typography></li>
+              ))}
+            </ul>
             {timestamp && (
               <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
                 {new Date(timestamp).toLocaleString()}
@@ -160,7 +160,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSave, onDelete, se
     >
       <MessageBubble className={message.role}>
         <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between">
-          <Typography variant="body1">{message.content}</Typography>
+          {/* Removed raw message.content to avoid duplicate summary display */}
           <Stack direction="row" spacing={1}>
             {message.role === 'assistant' && (
               <>

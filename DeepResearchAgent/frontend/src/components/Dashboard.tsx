@@ -92,7 +92,11 @@ const Dashboard: React.FC = () => {
                     {new Date(results.timestamp).toLocaleString()}
                   </Typography>
                   <Divider sx={{ my: 1 }} />
-                  <Typography variant="body1">{results.summary}</Typography>
+                  <ul style={{ margin: 0, paddingLeft: 20 }}>
+                    {results.summary && results.summary.split('•').map((point, idx) => (
+                      point.trim() && <li key={idx}><Typography variant="body1">{point.trim()}</Typography></li>
+                    ))}
+                  </ul>
                 </Paper>
 
                 {/* Key Findings */}

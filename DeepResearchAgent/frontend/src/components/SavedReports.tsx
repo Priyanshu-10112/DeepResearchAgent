@@ -127,7 +127,11 @@ const SavedReports: React.FC = () => {
             <DialogTitle>{selectedReport.topic}</DialogTitle>
             <DialogContent>
               <Stack spacing={2}>
-                <Typography variant="body1">{selectedReport.summary}</Typography>
+                <ul style={{ margin: 0, paddingLeft: 20 }}>
+                  {selectedReport.summary && selectedReport.summary.split('•').map((point, idx) => (
+                    point.trim() && <li key={idx}><Typography variant="body1">{point.trim()}</Typography></li>
+                  ))}
+                </ul>
 
                 {selectedReport.keyFindings && selectedReport.keyFindings.length > 0 && (
                   <Box>
