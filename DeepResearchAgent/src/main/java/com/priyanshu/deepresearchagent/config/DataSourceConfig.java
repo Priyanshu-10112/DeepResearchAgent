@@ -48,4 +48,9 @@ public class DataSourceConfig {
     public BasicSummarizationService basicSummarizationService() {
         return new BasicSummarizationService();
     }
+
+    @Bean
+    public GNewsSourceService gNewsSourceService() {
+        return new GNewsSourceService();
+    }
 } 

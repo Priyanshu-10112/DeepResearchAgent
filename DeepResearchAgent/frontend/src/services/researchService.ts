@@ -102,4 +102,5 @@ export const availableSources: string[] = [
   'reddit',
   'twitter',
   'news',
+  'GNEWS',
 ]; 

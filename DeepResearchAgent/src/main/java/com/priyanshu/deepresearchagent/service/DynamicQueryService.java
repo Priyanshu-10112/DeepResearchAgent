@@ -13,19 +13,26 @@ import com.priyanshu.deepresearchagent.service.BasicSummarizationService;
 
 @Service
 public class DynamicQueryService {
-    
-    @Autowired
-    private NewsSourceService newsSourceService;
-    
-    @Autowired
-    private AcademicSourceService academicSourceService;
-    
-    @Autowired
-    private ForumSourceService forumSourceService;
+    private final NewsSourceService newsSourceService;
+    private final AcademicSourceService academicSourceService;
+    private final ForumSourceService forumSourceService;
+    private final GNewsSourceService gNewsSourceService;
+    private final BasicSummarizationService basicSummarizationService;
 
-    @Autowired
-    private BasicSummarizationService basicSummarizationService;
-
+    public DynamicQueryService(
+        NewsSourceService newsSourceService,
+        AcademicSourceService academicSourceService,
+        ForumSourceService forumSourceService,
+        GNewsSourceService gNewsSourceService,
+        BasicSummarizationService basicSummarizationService
+    ) {
+        this.newsSourceService = newsSourceService;
+        this.academicSourceService = academicSourceService;
+        this.forumSourceService = forumSourceService;
+        this.gNewsSourceService = gNewsSourceService;
+        this.basicSummarizationService = basicSummarizationService;
+    }
+    
     public ResearchResult processDynamicQuery(DynamicQuery query) {
         // Initialize result map
         Map<Source, List<SourceContent>> sourceContents = new HashMap<>();
@@ -43,6 +50,7 @@ public class DynamicQueryService {
                         case NEWS -> newsSourceService.searchContent(query.getQuery(), query.getTimeRange());
                         case ACADEMIC -> academicSourceService.searchContent(query.getQuery(), query.getTimeRange());
                         case FORUM -> forumSourceService.searchContent(query.getQuery(), query.getTimeRange());
+                        case GNEWS -> gNewsSourceService.searchContent(query.getQuery(), query.getTimeRange());
                     };
                     return new AbstractMap.SimpleEntry<>(source, contents);
                 } catch (Exception e) {

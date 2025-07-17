@@ -26,7 +26,7 @@ export const SourceSelector: React.FC<SourceSelectorProps> = ({ sources, onSourc
           <ToggleButton
             key={source}
             value={source}
-            aria-label={source.toLowerCase()}
+            aria-label={(source as string).toLowerCase()}
             sx={{
               textTransform: 'none',
               borderRadius: '20px !important',
@@ -39,7 +39,7 @@ export const SourceSelector: React.FC<SourceSelectorProps> = ({ sources, onSourc
               },
             }}
           >
-            {source.charAt(0) + source.slice(1).toLowerCase()}
+            {(source as string).charAt(0) + (source as string).slice(1).toLowerCase()}
           </ToggleButton>
         ))}
       </ToggleButtonGroup>
