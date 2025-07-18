@@ -47,10 +47,18 @@ public class DynamicQueryService {
             .<CompletableFuture<Map.Entry<Source, List<SourceContent>>>>map(source -> CompletableFuture.supplyAsync(() -> {
                 try {
                     List<SourceContent> contents = switch (source) {
-                        case NEWS -> newsSourceService.searchContent(query.getQuery(), query.getTimeRange());
+                        case NEWS -> {
+                            List<SourceContent> newsResults = newsSourceService.searchContent(query.getQuery(), query.getTimeRange());
+                            List<SourceContent> gnewsResults = gNewsSourceService.searchContent(query.getQuery(), query.getTimeRange());
+                            // Set source label to NEWS for all GNews results
+                            gnewsResults.forEach(c -> c.setSource("NEWS"));
+                            List<SourceContent> combined = new ArrayList<>();
+                            combined.addAll(newsResults);
+                            combined.addAll(gnewsResults);
+                            yield combined;
+                        }
                         case ACADEMIC -> academicSourceService.searchContent(query.getQuery(), query.getTimeRange());
                         case FORUM -> forumSourceService.searchContent(query.getQuery(), query.getTimeRange());
-                        case GNEWS -> gNewsSourceService.searchContent(query.getQuery(), query.getTimeRange());
                     };
                     return new AbstractMap.SimpleEntry<>(source, contents);
                 } catch (Exception e) {

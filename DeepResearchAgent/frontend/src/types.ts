@@ -21,8 +21,7 @@ export interface ResearchResult {
 export enum Source {
     NEWS = 'NEWS',
     ACADEMIC = 'ACADEMIC',
-    FORUM = 'FORUM',
-    GNEWS = 'GNEWS'
+    FORUM = 'FORUM'
 }
 
 export enum QueryType {

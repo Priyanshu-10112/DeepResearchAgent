@@ -101,6 +101,5 @@ export const availableSources: string[] = [
   'arxiv',
   'reddit',
   'twitter',
-  'news',
-  'GNEWS',
+  'news', // merged GNEWS into news
 ]; 

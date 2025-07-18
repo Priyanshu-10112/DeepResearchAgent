@@ -159,11 +159,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSave, onDelete, se
       }}
     >
       <MessageBubble className={message.role}>
-        <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between">
-          {/* Removed raw message.content to avoid duplicate summary display */}
-          <Stack direction="row" spacing={1}>
-            {message.role === 'assistant' && (
-              <>
+        {message.role === 'user' ? (
+          <Typography variant="body1" sx={{ wordBreak: 'break-word' }}>{message.content}</Typography>
+        ) : (
+          <>
+            <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between">
+              <Stack direction="row" spacing={1}>
                 <Tooltip title="Save">
                   <IconButton size="small" onClick={onSave} aria-label="Save message">
                     <SaveIcon />
@@ -174,11 +175,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSave, onDelete, se
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>
-              </>
-            )}
-          </Stack>
-        </Stack>
-        {message.role === 'assistant' && renderResults()}
+              </Stack>
+            </Stack>
+            {renderResults()}
+          </>
+        )}
         <Typography variant="caption" sx={{ display: 'block', mt: 1, opacity: 0.7 }}>
           {new Date(message.timestamp).toLocaleString()}
         </Typography>

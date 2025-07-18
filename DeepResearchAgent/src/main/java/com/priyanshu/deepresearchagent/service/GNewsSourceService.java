@@ -35,7 +35,7 @@ public class GNewsSourceService {
                         article.hasNonNull("publishedAt") ? article.get("publishedAt").asText() : null,
                         article.hasNonNull("author") ? article.get("author").asText() : null,
                         0.0, // relevanceScore, can be set later
-                        "GNEWS"
+                        "NEWS"
                     );
                     results.add(content);
                 }

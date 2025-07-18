@@ -12,7 +12,7 @@ import { Source, TimeRange } from './types';
 
 function App() {
   const [darkMode, setDarkMode] = useState(true); // Default to dark mode
-  const [sources, setSources] = useState<Source[]>([Source.NEWS, Source.ACADEMIC, Source.FORUM, Source.GNEWS]);
+  const [sources, setSources] = useState<Source[]>([Source.NEWS, Source.ACADEMIC, Source.FORUM]);
   const [timeRange, setTimeRange] = useState<TimeRange>(TimeRange.LAST_MONTH);
   const mode = darkMode ? 'dark' : 'light';
   const theme = useMemo(() => createAppTheme(mode), [mode]);
